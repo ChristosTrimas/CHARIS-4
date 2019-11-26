@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date:    21:39:52 02/19/2019 
+-- Create Date:    22:38:28 03/04/2019 
 -- Design Name: 
--- Module Name:    Reg_32 - Behavioral 
+-- Module Name:    mux_2_1_5bits - Behavioral 
 -- Project Name: 
 -- Target Devices: 
 -- Tool versions: 
@@ -29,33 +29,19 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity Reg_32 is
-    Port ( CLK : in  STD_LOGIC;
-           WE : in  STD_LOGIC;
-			  reset : in STD_LOGIC;
-           Data : in  STD_LOGIC_VECTOR (31 downto 0);
-           Dout : out  STD_LOGIC_VECTOR (31 downto 0));
-end Reg_32;
+entity mux_2_1_5bits is
+    Port ( A : in  STD_LOGIC_VECTOR (4 downto 0);
+           B : in  STD_LOGIC_VECTOR (4 downto 0);
+           sel : in  STD_LOGIC;
+           Outp : out  STD_LOGIC_VECTOR (4 downto 0));
+end mux_2_1_5bits;
 
-architecture Behavioral of Reg_32 is
-
-signal temp : STD_LOGIC_VECTOR(31 downto 0);
+architecture Behavioral of mux_2_1_5bits is
 
 begin
 
-Process(CLK,reset)
-begin
-	if(reset = '1') then temp <= "00000000000000000000000000000000";	
-	elsif (CLK'EVENT AND CLK='1') THEN
-		if(WE='1') then 
-			temp<= Data;
-		else
-			temp <= temp;
-		end if;
-	end if;
-end process;	
-
-Dout <= temp after 5 ns;
+Outp <= A when sel = '0' else
+		  B when sel = '1';
 
 end Behavioral;
 

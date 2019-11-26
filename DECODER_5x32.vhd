@@ -35,10 +35,10 @@ entity DECODER_5x32 is
 end DECODER_5x32;
 
 architecture Behavioral of DECODER_5x32 is
-
+signal outsdec : STD_LOGIC_VECTOR (31 downto 0);
 begin
 with Input select
-	Output <= 	  "00000000000000000000000000000000" when "00000",--R0 = zero always
+	outsdec <= 	  "00000000000000000000000000000001" when "00000",
 					  "00000000000000000000000000000010" when "00001",
 					  "00000000000000000000000000000100" when "00010",
 					  "00000000000000000000000000001000" when "00011",
@@ -71,6 +71,6 @@ with Input select
 					  "01000000000000000000000000000000" when "11110",
 					  "10000000000000000000000000000000" when others;
 
-
+Output <= outsdec after 5 ns;
 end Behavioral;
 

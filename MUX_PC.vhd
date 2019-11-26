@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date:    21:39:52 02/19/2019 
+-- Create Date:    19:44:13 02/27/2019 
 -- Design Name: 
--- Module Name:    Reg_32 - Behavioral 
+-- Module Name:    MUX_PC - Behavioral 
 -- Project Name: 
 -- Target Devices: 
 -- Tool versions: 
@@ -29,33 +29,19 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity Reg_32 is
-    Port ( CLK : in  STD_LOGIC;
-           WE : in  STD_LOGIC;
-			  reset : in STD_LOGIC;
-           Data : in  STD_LOGIC_VECTOR (31 downto 0);
-           Dout : out  STD_LOGIC_VECTOR (31 downto 0));
-end Reg_32;
+entity MUX_2x1 is
+    Port ( SEL : in  STD_LOGIC;
+           MUXIn1 : in  STD_LOGIC_VECTOR (31 downto 0);
+           MUXIn2 : in  STD_LOGIC_VECTOR (31 downto 0);
+           MUXOut : out  STD_LOGIC_VECTOR (31 downto 0));
+end MUX_2x1;
 
-architecture Behavioral of Reg_32 is
-
-signal temp : STD_LOGIC_VECTOR(31 downto 0);
+architecture Behavioral of MUX_2x1 is
 
 begin
 
-Process(CLK,reset)
-begin
-	if(reset = '1') then temp <= "00000000000000000000000000000000";	
-	elsif (CLK'EVENT AND CLK='1') THEN
-		if(WE='1') then 
-			temp<= Data;
-		else
-			temp <= temp;
-		end if;
-	end if;
-end process;	
-
-Dout <= temp after 5 ns;
+MUXOut <= MUXIn1 when SEL = '0' else
+			 MUXIn2;
 
 end Behavioral;
 

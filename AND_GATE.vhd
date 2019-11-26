@@ -36,10 +36,11 @@ entity AND_GATE is
 end AND_GATE;
 
 architecture Behavioral of AND_GATE is
-
+SIGNAL OUTP : STD_LOGIC;
 begin
 
-OUTS <= A AND B; 
+OUTP <= A AND B; 
 
+OUTS <= OUTP after 2 ns;
 end Behavioral;
 

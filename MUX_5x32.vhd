@@ -67,10 +67,10 @@ entity MUX_5x32 is
 end MUX_5x32;
 
 architecture Behavioral of MUX_5x32 is
-
+signal muxo : STD_LOGIC_VECTOR(31 DOWNTO 0);
 begin
 
-Dout <=	  MUXRe0 when MUXsel = "00000"  else
+muxo <=	  MUXRe0 when MUXsel = "00000"  else
 			  MUXRe1 when MUXsel = "00001"	else
 			  MUXRe2 when MUXsel = "00010"	else
 			  MUXRe3 when MUXsel = "00011"	else
@@ -103,5 +103,6 @@ Dout <=	  MUXRe0 when MUXsel = "00000"  else
 			  MUXRe30 when MUXsel = "11110"	else 
 			  MUXRe31;
 
+Dout <= muxo after 5ns;
 end Behavioral;
 

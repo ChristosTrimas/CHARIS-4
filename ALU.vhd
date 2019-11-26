@@ -44,7 +44,7 @@ end ALU;
 architecture Behavioral of ALU is
 
 signal temp : STD_LOGIC_VECTOR (31 downto 0);
-signal giorgos,manousos : STD_LOGIC;
+signal cout_sig,ovf_sig,zero_sig : STD_LOGIC;
 
 begin
 
@@ -52,7 +52,9 @@ temp <= (A + B) when Op = "0000" else
 		  (A - B) when Op = "0001" else
 		  (A AND B) when Op = "0010" else
 		  (A OR B) when Op = "0011" else
-		   (NOT A) when Op = "0100" else
+		  (NOT A) when Op = "0100" else
+		  (A NAND B) when Op = "0110" else
+			(A NOR B) when Op = "0111" else
 			A(31) & A(31 downto 1) when Op = "1000" else
 			'0' & A(31 downto 1) when Op = "1001" else
 			A(30 downto 0) & '0' when Op = "1010" else
@@ -62,19 +64,20 @@ temp <= (A + B) when Op = "0000" else
 			
 Outs <= temp after 10 ns;
 
-Zero <= '1' when temp = "00000000000000000000000000000000" else '0' after 10 ns;
+zero_sig <= '1' when temp = "00000000000000000000000000000000" else '0';
+Zero <= zero_sig after 10 ns;
 
-manousos <= A(31) XOR temp(31) when (A(31) = B(31)) AND (Op = "0000")  else
+ovf_sig <= A(31) XOR temp(31) when (A(31) = B(31)) AND (Op = "0000")  else
 		 B(31) XOR temp(31) when (A(31) /= B(31)) AND (Op = "0001")  else
 		 '0';
 
-Ovf <= manousos after 10 ns;
+Ovf <= ovf_sig after 10 ns;
 
-giorgos <= 	A(31) when (A(31) = B(31)) AND (Op = "0000")  else
+cout_sig <= 	A(31) when (A(31) = B(31)) AND (Op = "0000")  else
 			(NOT temp(31)) when (A(31) /= B(31)) AND (Op = "0001")  else
 			'0';
 	
-Cout <= giorgos after 10 ns;
+Cout <= cout_sig after 10 ns;
 
 end Behavioral;
 

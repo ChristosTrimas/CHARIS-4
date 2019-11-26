@@ -33,6 +33,7 @@ entity RegisterFile32 is
     Port ( Ard1 : in  STD_LOGIC_VECTOR (4 downto 0);
            Ard2 : in  STD_LOGIC_VECTOR (4 downto 0);
            Awr : in  STD_LOGIC_VECTOR (4 downto 0);
+			  reset : in STD_LOGIC;
            Dout1 : out  STD_LOGIC_VECTOR (31 downto 0);
            Dout2 : out  STD_LOGIC_VECTOR (31 downto 0);
            Din : in  STD_LOGIC_VECTOR (31 downto 0);
@@ -93,6 +94,7 @@ end component;
 component Reg_32 is
 	Port ( CLK : in  STD_LOGIC;
            WE : in  STD_LOGIC;
+			  reset : in STD_LOGIC;
            Data : in  STD_LOGIC_VECTOR (31 downto 0);
            Dout : out  STD_LOGIC_VECTOR (31 downto 0));
 end component;
@@ -105,8 +107,8 @@ dec: DECODER_5x32 port map(Input => Awr,
 							 Output => decout);
 							 
 and_0: AND_GATE port map(A => WrEn,
-								B => NOT decout(0),
-								OUTS => wen(0));
+								 B => decout(0),
+								 OUTS => wen(0));
 			
 and_1: AND_GATE port map(A => WrEn,
 								B => decout(1),
@@ -234,161 +236,193 @@ and_31: AND_GATE port map(A => WrEn,
 
 reg0: Reg_32 port map(CLK => CLK,
 							 WE => wen(0),
+							 reset => reset,
 							 Data => "00000000000000000000000000000000",
 							 Dout => regout0);
 							 
 reg1: Reg_32 port map(CLK => CLK,
 							 WE => wen(1),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout1);
 							 
 reg2: Reg_32 port map(CLK => CLK,
 							 WE => wen(2),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout2);
 							 
 reg3: Reg_32 port map(CLK => CLK,
 							 WE => wen(3),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout3);
 							 
 reg4: Reg_32 port map(CLK => CLK,
 							 WE => wen(4),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout4);
 							 
 reg5: Reg_32 port map(CLK => CLK,
 							 WE => wen(5),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout5);
 							 
 reg6: Reg_32 port map(CLK => CLK,
 							 WE => wen(6),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout6);
 							 
 reg7: Reg_32 port map(CLK => CLK,
 							 WE => wen(7),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout7);
 							 
 reg8: Reg_32 port map(CLK => CLK,
 							 WE => wen(8),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout8);
 							 
 reg9: Reg_32 port map(CLK => CLK,
 							 WE => wen(9),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout9);
 							 
 reg10: Reg_32 port map(CLK => CLK,
 							 WE => wen(10),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout10);
 							 
 reg11: Reg_32 port map(CLK => CLK,
 							 WE => wen(11),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout11);
 							 
 reg12: Reg_32 port map(CLK => CLK,
 							 WE => wen(12),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout12);
 							 
 reg13: Reg_32 port map(CLK => CLK,
 							 WE => wen(13),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout13);
 							 
 reg14: Reg_32 port map(CLK => CLK,
 							 WE => wen(14),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout14);
 							 
 reg15: Reg_32 port map(CLK => CLK,
 							 WE => wen(15),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout15);
 							 
 reg16: Reg_32 port map(CLK => CLK,
 							 WE => wen(16),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout16);
 							 
 reg17: Reg_32 port map(CLK => CLK,
 							 WE => wen(17),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout17);
 							 
 reg18: Reg_32 port map(CLK => CLK,
 							 WE => wen(18),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout18);
 							 
 reg19: Reg_32 port map(CLK => CLK,
 							 WE => wen(19),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout19);
 							 
 reg20: Reg_32 port map(CLK => CLK,
 							 WE => wen(20),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout20);
 							 
 reg21: Reg_32 port map(CLK => CLK,
 							 WE => wen(21),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout21);
 							 
 reg22: Reg_32 port map(CLK => CLK,
 							 WE => wen(22),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout22);
 							 
 reg23: Reg_32 port map(CLK => CLK,
 							 WE => wen(23),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout23);
 							 
 reg24: Reg_32 port map(CLK => CLK,
 							 WE => wen(24),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout24);
 							 
 reg25: Reg_32 port map(CLK => CLK,
 							 WE => wen(25),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout25);
 							 
 reg26: Reg_32 port map(CLK => CLK,
 							 WE => wen(26),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout26);
 							 
 reg27: Reg_32 port map(CLK => CLK,
 							 WE => wen(27),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout27);
 							 
 reg28: Reg_32 port map(CLK => CLK,
 							 WE => wen(28),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout28);
 							 
 reg29: Reg_32 port map(CLK => CLK,
 							 WE => wen(29),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout29);
 							 
 reg30: Reg_32 port map(CLK => CLK,
 							 WE => wen(30),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout30);
 							 
 reg31: Reg_32 port map(CLK => CLK,
 							 WE => wen(31),
+							 reset => reset,
 							 Data => Din,
 							 Dout => regout31);
 							 
