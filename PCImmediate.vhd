@@ -39,10 +39,15 @@ end PCImmediate;
 
 architecture Behavioral of PCImmediate is
 
+signal temp,temp1 : STD_LOGIC_VECTOR(31 downto 0);
+
 begin
 
-PCmOut <= PCIm + Immediate ;
---+ "00000000000000000000000000000100"
+--temp <= NOT(PCIm) + "00000000000000000000000000000001" ;
+
+PCmOut <= Immediate + PCIm ;
+
+--PCmOut <= NOT(temp1) + "00000000000000000000000000000001";
 
 end Behavioral;
 

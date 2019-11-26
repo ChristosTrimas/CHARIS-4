@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date:    19:11:50 02/27/2019 
+-- Create Date:    21:46:30 03/17/2019 
 -- Design Name: 
--- Module Name:    RAM - Behavioral 
+-- Module Name:    Memory - Structural 
 -- Project Name: 
 -- Target Devices: 
 -- Tool versions: 
@@ -19,9 +19,6 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use ieee.std_logic_unsigned.all;
-use std.textio.all;
-use ieee.std_logic_textio.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -32,45 +29,59 @@ use ieee.std_logic_textio.all;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity RAM is
+entity Memory is
+    Port ( Clk : in  STD_LOGIC;
+           ALU_MEM_Addr : in  STD_LOGIC_VECTOR (31 downto 0);
+           MEM_DataIn : in  STD_LOGIC_VECTOR (31 downto 0);
+			  PC_Sel : in STD_LOGIC;
+			  PC_LdEn : in STD_LOGIC;
+			  PC_Imm : in STD_LOGIC_VECTOR(31 downto 0);
+           MEM_DataOut : out  STD_LOGIC_VECTOR (31 downto 0);
+			  Instruction : out STD_LOGIC_VECTOR(31 downto 0);
+			  Reset : in STD_LOGIC;
+           MEM_Wr_En : in  STD_LOGIC);
+end Memory;
+
+architecture Structural of Memory is
+
+component MEM is
     Port ( clk : in  STD_LOGIC;
-           inst_addr : in  STD_LOGIC_VECTOR (10 downto 0);
-           inst_dout : out  STD_LOGIC_VECTOR (31 downto 0);
-           data_we : in  STD_LOGIC;
-           data_addr : in  STD_LOGIC_VECTOR (10 downto 0);
-           data_din : in  STD_LOGIC_VECTOR (31 downto 0);
-           data_dout : out  STD_LOGIC_VECTOR (31 downto 0));
-end RAM;
+           MemWr_En : in  STD_LOGIC;
+			  INST_DOUT : out STD_LOGIC_VECTOR(31 downto 0);
+			  INST_ADR : in STD_LOGIC_VECTOR(10 downto 0);
+           ALU_MEM_Addr : in  STD_LOGIC_VECTOR (31 downto 0);
+           MEM_DataIn : in  STD_LOGIC_VECTOR (31 downto 0);
+           MEM_DataOut : out  STD_LOGIC_VECTOR (31 downto 0));
+end component;
 
-architecture Behavioral of RAM is
-	type ram_type is array (2047 downto 0) of std_logic_vector(31 downto 0);
+component IFSTAGE is
+    Port ( PC_Immed : in  STD_LOGIC_VECTOR (31 downto 0);
+           PC_sel : in  STD_LOGIC;
+           PC_LdEn : in  STD_LOGIC;
+           Reset : in  STD_LOGIC;
+			  Clk : in STD_LOGIC;
+           PC : out  STD_LOGIC_VECTOR (31 downto 0));
+end component;
 
-	 impure function InitRamFromFile (RamFileName : in string) return ram_type is
-	 FILE ramfile : text is in RamFileName;
-	 variable RamFileLine : line;
-	 variable ram : ram_type;
-	 begin
-		 for i in 0 to 1023 loop
-		 readline(ramfile, RamFileLine);
-		 read (RamFileLine, ram(i));
-	 end loop;
-	 for i in 1024 to 2047 loop
-			ram(i) := x"00000000";
-	 end loop;
- return ram;
- end function;
-signal RAM: ram_type := InitRamFromFile("ram.data");
+signal pctomem : STD_LOGIC_VECTOR(31 downto 0);
 
- begin
-	process (clk)
-	begin
-		if clk'event and clk = '1' then
-			if data_we = '1' then
-				RAM(conv_integer(data_addr)) <= data_din;
-			end if;
-		end if;
-	end process;
---end syn;
+begin
 
-end Behavioral;
+instrfetch: IFSTAGE port map(PC_Immed => PC_Imm,
+									  PC_sel => PC_Sel,
+									  PC_LdEn => PC_LdEn,
+									  Reset => Reset,
+									  Clk => Clk,
+									  PC => pctomem);
+									  
+meme: MEM port map(clk => Clk,
+						 MemWr_En => MEM_Wr_En,
+						 INST_DOUT => Instruction,
+						 INST_ADR => pctomem(12 downto 2),
+						 ALU_MEM_Addr => ALU_MEM_Addr,
+						 MEM_DataIn => MEM_DataIn,
+						 MEM_DataOut => MEM_DataOut);
+									  
+
+end Structural;
 

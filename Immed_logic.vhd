@@ -32,6 +32,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity Immed_logic is
     Port ( Instr_in : in  STD_LOGIC_VECTOR (15 downto 0);
 			  Opcode : in STD_LOGIC_VECTOR(5 downto 0);
+			  ImmExt : in STD_LOGIC;
            Immed_out : out  STD_LOGIC_VECTOR (31 downto 0));
 end Immed_logic;
 
@@ -39,12 +40,12 @@ architecture Behavioral of Immed_logic is
 
 begin
 
-Immed_out <= "0000000000000000" & Instr_in when (Opcode = "110010" OR Opcode = "110011") else --zero filling gia nandi kai ori
-				 Instr_in & "0000000000000000" when (Opcode = "111001") else --   <<16(zero filling) lui
-				 "0000000000000000" & Instr_in when ((Opcode = "111000" OR Opcode = "110000" OR Opcode = "000111" OR Opcode = "000111" OR Opcode = "001111")) AND (Instr_in(15) = '0') else --sign extend msb=0 li,addi,lb,sb,lw
-				 "1111111111111111" & Instr_in when ((Opcode = "111000" OR Opcode = "110000" OR Opcode = "000111" OR Opcode = "000111" OR Opcode = "001111")) AND (Instr_in(15) = '1') else --sign extend msb=1 li,addi,lb,sb,lw
-				 "00000000000000" & Instr_in & "00" when ((Opcode = "000000" OR Opcode = "000001" OR Opcode = "111111")) AND (Instr_in(15) = '0') else -- b,beq,bne signExtend<<2 msb = 0
-				 "11111111111111" & Instr_in & "00" when ((Opcode = "000000" OR Opcode = "000001" OR Opcode = "111111")) AND (Instr_in(15) = '1'); -- b,beq,bne signExtend<<2 msb = 1
-				 
+Immed_out <= "0000000000000000" & Instr_in when ((Opcode = "110010" OR Opcode = "110011") AND ImmExt = '0') else --zero filling gia nandi kai ori
+				 Instr_in & "0000000000000000" when ((Opcode = "111001") AND ImmExt = '0') else --   <<16(zero filling) lui
+				 "0000000000000000" & Instr_in when ((Opcode = "111000" OR Opcode = "110000" OR Opcode = "000111" OR Opcode = "000111" OR Opcode = "001111")) AND ((Instr_in(15) = '0') AND (ImmExt = '1')) else --sign extend msb=0 li,addi,lb,sb,lw
+				 "1111111111111111" & Instr_in when ((Opcode = "111000" OR Opcode = "110000" OR Opcode = "000111" OR Opcode = "000111" OR Opcode = "001111")) AND ((Instr_in(15) = '1') AND (ImmExt = '1'))else --sign extend msb=1 li,addi,lb,sb,lw
+				 "00000000000000" & Instr_in & "00" when ((Opcode = "000000" OR Opcode = "000001" OR Opcode = "111111")) AND ((Instr_in(15) = '0') AND (ImmExt = '1')) else -- b,beq,bne signExtend<<2 msb = 0
+				 "11111111111111" & Instr_in & "00" when ((Opcode = "000000" OR Opcode = "000001" OR Opcode = "111111")) AND ((Instr_in(15) = '1') AND (ImmExt = '1')) else -- b,beq,bne signExtend<<2 msb = 1
+				 "0000000000000000" & Instr_in;
 end Behavioral;
 

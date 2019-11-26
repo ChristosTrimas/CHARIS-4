@@ -32,7 +32,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity MEM is
     Port ( clk : in  STD_LOGIC;
            MemWr_En : in  STD_LOGIC;
-			  --INST_DOUT : in STD_LOGIC VECTOR(31 downto 0);
+			  INST_DOUT : out STD_LOGIC_VECTOR(31 downto 0);
+			  INST_ADR : in STD_LOGIC_VECTOR(10 downto 0);
            ALU_MEM_Addr : in  STD_LOGIC_VECTOR (31 downto 0);
            MEM_DataIn : in  STD_LOGIC_VECTOR (31 downto 0);
            MEM_DataOut : out  STD_LOGIC_VECTOR (31 downto 0));
@@ -63,8 +64,8 @@ al_ram : alu_ram port map(al_me_addr => ALU_MEM_Addr,
 								  adr_0x400 => temp);
 
 ram_mem : RAM port map(clk => clk,
-							  inst_addr => "00000000000",
-							  inst_dout => "00000000000000000000000000000000",
+							  inst_addr => INST_ADR,
+							  inst_dout => INST_DOUT,
 							  data_we => MemWr_En,
 							  data_addr => temp(12 downto 2),
 							  data_din => MEM_DataIn,

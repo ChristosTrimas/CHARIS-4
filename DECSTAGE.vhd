@@ -38,6 +38,7 @@ entity DECSTAGE is
            RF_B_sel : in  STD_LOGIC;
            Clk : in  STD_LOGIC;
 			  RESET : in STD_LOGIC;
+			  ImmExt : in STD_LOGIC;
            Immed : out  STD_LOGIC_VECTOR (31 downto 0);
            RF_A : out  STD_LOGIC_VECTOR (31 downto 0);
            RF_B : out  STD_LOGIC_VECTOR (31 downto 0));
@@ -67,6 +68,7 @@ end component;
 component Immed_logic is
     Port ( Instr_in : in  STD_LOGIC_VECTOR (15 downto 0);
 			  Opcode : in STD_LOGIC_VECTOR(5 downto 0);
+			  ImmExt : in STD_LOGIC;
            Immed_out : out  STD_LOGIC_VECTOR (31 downto 0));
 end component;
 
@@ -77,8 +79,15 @@ component MUX_2x1 is
            MUXOut : out  STD_LOGIC_VECTOR (31 downto 0));
 end component;
 
+component lb is
+    Port ( inputLoadByte : in  STD_LOGIC_VECTOR (31 downto 0);
+           outputLoadByte : out  STD_LOGIC_VECTOR (31 downto 0);
+           Opcode : in  STD_LOGIC_VECTOR (5 downto 0));
+end component;
+
 signal mux_inst : STD_LOGIC_VECTOR(4 downto 0);
 signal mux_wr_data : STD_LOGIC_VECTOR(31 downto 0);
+signal signalLb : STD_LOGIC_VECTOR(31 downto 0);
 
 begin
 
@@ -94,10 +103,11 @@ rf : RegisterFile32 port map(Ard1 => Instr(25 downto 21),
 									  
 Immediate : Immed_logic port map(Instr_in => Instr(15 downto 0),
 									  Opcode => Instr(31 downto 26),
+									  ImmExt => ImmExt,
 									  Immed_out => Immed);
 									  
 mux1 : MUX_2x1 port map(SEL => RF_WrData_sel,
-								MUXIn1 => MEM_out,
+								MUXIn1 => signalLb,
 								MUXIn2 => ALU_out,
 								MUXOut => mux_wr_data);
 								
@@ -105,6 +115,10 @@ mux2 : mux_2_1_5bits port map(A => Instr(15 downto 11),
 										B => Instr(20 downto 16),
 										sel => RF_B_sel,
 										Outp => mux_inst);
+										
+loadb: lb port map(inputLoadByte => MEM_out,
+							 outputLoadByte => signalLb,
+							 Opcode => Instr(31 downto 26));
 
 end Structural;
 
